@@ -281,7 +281,7 @@ const DashboardPage: React.FC = () => {
   // ── Cargar SDK de Google Maps ────────────────────────────────────────────────
   useEffect(() => {
     // ⚠️  REEMPLAZA 'YOUR_API_KEY' con tu Google Maps API key
-    const API_KEY = "YOUR_API_KEY";
+    const API_KEY = "AIzaSyACXptMqnheiB_WDXa9fjyhjG4NjMzt9iw";
 
     if (window.google) {
       initMap();
