@@ -1,51 +1,67 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
     {
-      id: "maps",
-      name: "Mapa",
+      id: "dashboard",
+      name: "Dashboard",
       icon: (
-        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fillRule="evenodd"
-            d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z"
-            clipRule="evenodd"
-          />
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
       ),
       href: "/dashboard",
     },
-    /*{
-      id: "profile",
-      name: "Perfil",
+    {
+      id: "formulario",
+      name: "Formulario",
       icon: (
-        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fillRule="evenodd"
-            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-            clipRule="evenodd"
-          />
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       ),
-      href: "/profile",
+      href: "/formulario",
     },
     {
-      id: "favorites",
-      name: "Favoritos",
+      id: "multimedia",
+      name: "Multimedia",
       icon: (
-        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      href: "/favorites",
-    },*/
+      href: "/multimedia",
+    },
+    {
+      id: "mapa",
+      name: "Mapa",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+      href: "/mapa",
+    },
+    {
+      id: "estadisticas",
+      name: "Estadísticas",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+        </svg>
+      ),
+      href: "/estadisticas",
+    },
   ];
 
   const isActive = (href: string) => {
@@ -53,99 +69,98 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-20 bg-white border-r border-gray-200 flex flex-col items-center py-6 space-y-6 fixed h-screen z-50">
-      {/* Menu Button / Logo */}
-      <Link
-        href="/dashboard"
-        className="text-gray-600 hover:text-gray-900 transition-colors p-2 mb-2"
+    <>
+      {/* Mobile Hamburger Button */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden fixed top-4 left-4 z-[60] p-2 bg-white rounded-md shadow-md text-gray-600 hover:text-blue-600 transition-colors"
       >
-        <div className="text-2xl">🌤️</div>
-      </Link>
-
-      <div className="h-px w-12 bg-gray-200" />
-
-      {/* Navigation Items */}
-      <nav className="flex flex-col items-center space-y-4 flex-1">
-        {menuItems.map((item) => (
-          <Link
-            key={item.id}
-            href={item.href}
-            className={`flex flex-col items-center relative transition-colors ${
-              isActive(item.href)
-                ? "text-blue-600"
-                : "text-gray-400 hover:text-gray-900"
-            }`}
-          >
-            <div
-              className={`w-12 h-12 flex items-center justify-center rounded-xl mb-1 transition-colors ${
-                isActive(item.href) ? "bg-blue-50" : "hover:bg-gray-50"
-              }`}
-            >
-              {item.icon}
-            </div>
-            <span className="text-xs font-medium">{item.name}</span>
-
-            {/* Active Indicator */}
-            {isActive(item.href) && (
-              <div className="absolute -right-6 top-0 w-1 h-12 bg-blue-600 rounded-full" />
-            )}
-          </Link>
-        ))}
-      </nav>
-
-      {/* Settings at bottom */}
-      <div className="h-px w-12 bg-gray-200" />
-
-      <Link
-        href="/settings"
-        className={`flex flex-col items-center transition-colors ${
-          isActive("/settings")
-            ? "text-blue-600"
-            : "text-gray-400 hover:text-gray-900"
-        }`}
-      >
-        <div
-          className={`w-12 h-12 flex items-center justify-center rounded-xl mb-1 ${
-            isActive("/settings") ? "bg-blue-50" : "hover:bg-gray-50"
-          }`}
-        >
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
-        <span className="text-xs font-medium">Config</span>
-      </Link>
-
-      {/* Logout Button */}
-      <button
-        onClick={() => {
-          // Aquí iría la lógica de logout
-          console.log("Logout");
-        }}
-        className="flex flex-col items-center text-gray-400 hover:text-red-600 transition-colors"
-      >
-        <div className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-red-50 mb-1">
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-            />
-          </svg>
-        </div>
-        <span className="text-xs font-medium">Salir</span>
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+        </svg>
       </button>
-    </aside>
+
+      {/* Backdrop for mobile */}
+      {isOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/50 z-[40] transition-opacity"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <aside className={`fixed h-screen z-50 w-24 bg-white/90 backdrop-blur-md border-r border-gray-200 flex flex-col items-center py-6 space-y-6 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+        
+        {/* Logo */}
+        <Link
+          href="/dashboard"
+          className="text-gray-600 hover:text-gray-900 hover:scale-110 transition-transform p-2 mb-2"
+        >
+          <div className="text-3xl">🚀</div>
+        </Link>
+
+        <div className="h-px w-12 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+
+        {/* Navigation Items */}
+        <nav className="flex flex-col items-center space-y-4 flex-1 w-full">
+          {menuItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              className={`flex flex-col items-center relative w-full group transition-all duration-300 ${isActive(item.href)
+                ? "text-blue-600"
+                : "text-gray-400 hover:text-blue-500"
+                }`}
+            >
+              <div
+                className={`w-14 h-14 flex items-center justify-center rounded-2xl mb-1 transition-all duration-300 ${isActive(item.href) 
+                  ? "bg-blue-100 shadow-inner shadow-blue-200/50 scale-105" 
+                  : "group-hover:bg-gray-50 group-hover:scale-105"
+                  }`}
+              >
+                <div className={`${isActive(item.href) ? "animate-pulse" : "group-hover:animate-bounce"}`}>
+                  {item.icon}
+                </div>
+              </div>
+              <span className="text-[10px] font-semibold tracking-wide uppercase">{item.name}</span>
+
+              {/* Active Indicator */}
+              {isActive(item.href) && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-blue-600 rounded-r-full shadow-[0_0_8px_rgba(37,99,235,0.6)]" />
+              )}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="h-px w-12 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+
+        {/* Logout Button */}
+        <button
+          onClick={() => {
+            window.location.href = "/login";
+          }}
+          className="flex flex-col items-center w-full group text-gray-400 hover:text-red-500 transition-colors"
+        >
+          <div className="w-14 h-14 flex items-center justify-center rounded-2xl group-hover:bg-red-50 mb-1 transition-all group-hover:scale-105 group-hover:rotate-12">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+          </div>
+          <span className="text-[10px] font-semibold tracking-wide uppercase">Salir</span>
+        </button>
+      </aside>
+    </>
   );
 };
 

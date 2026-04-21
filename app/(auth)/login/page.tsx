@@ -34,7 +34,7 @@ const Login: React.FC = () => {
     } else {
       setTimeout(() => {
         console.log("Login attempt:", { email, password, remember });
-        globalThis.location.href = "/que-me-pongo/";
+        globalThis.location.href = "/que-me-pongo/dashboard";
         setIsLoading(false);
       }, 1500);
     }
@@ -222,11 +222,10 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full py-3.5 bg-gradient-to-r from-blue-500 to-slate-800 text-white rounded-xl font-semibold text-sm tracking-wide shadow-lg shadow-blue-500/25 transition-all ${
-                isLoading
+              className={`w-full py-3.5 bg-gradient-to-r from-blue-500 to-slate-800 text-white rounded-xl font-semibold text-sm tracking-wide shadow-lg shadow-blue-500/25 transition-all ${isLoading
                   ? "opacity-60 cursor-not-allowed"
                   : "hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-500/35"
-              } ${isLoading ? "relative" : ""}`}
+                } ${isLoading ? "relative" : ""}`}
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
