@@ -21,7 +21,7 @@ const Sidebar: React.FC = () => {
     },
     {
       id: "formulario",
-      name: "Formulario",
+      name: "Contacto",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -40,28 +40,6 @@ const Sidebar: React.FC = () => {
       ),
       href: "/multimedia",
     },
-    {
-      id: "mapa",
-      name: "Mapa",
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-      href: "/mapa",
-    },
-    {
-      id: "estadisticas",
-      name: "Estadísticas",
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-        </svg>
-      ),
-      href: "/estadisticas",
-    },
   ];
 
   const isActive = (href: string) => {
@@ -71,7 +49,7 @@ const Sidebar: React.FC = () => {
   return (
     <>
       {/* Mobile Hamburger Button */}
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-4 left-4 z-[60] p-2 bg-white rounded-md shadow-md text-gray-600 hover:text-blue-600 transition-colors"
       >
@@ -82,7 +60,7 @@ const Sidebar: React.FC = () => {
 
       {/* Backdrop for mobile */}
       {isOpen && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 bg-black/50 z-[40] transition-opacity"
           onClick={() => setIsOpen(false)}
         />
@@ -90,7 +68,7 @@ const Sidebar: React.FC = () => {
 
       {/* Sidebar Container */}
       <aside className={`fixed h-screen z-50 w-24 bg-white/90 backdrop-blur-md border-r border-gray-200 flex flex-col items-center py-6 space-y-6 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
-        
+
         {/* Logo */}
         <Link
           href="/dashboard"
@@ -114,8 +92,8 @@ const Sidebar: React.FC = () => {
                 }`}
             >
               <div
-                className={`w-14 h-14 flex items-center justify-center rounded-2xl mb-1 transition-all duration-300 ${isActive(item.href) 
-                  ? "bg-blue-100 shadow-inner shadow-blue-200/50 scale-105" 
+                className={`w-14 h-14 flex items-center justify-center rounded-2xl mb-1 transition-all duration-300 ${isActive(item.href)
+                  ? "bg-blue-100 shadow-inner shadow-blue-200/50 scale-105"
                   : "group-hover:bg-gray-50 group-hover:scale-105"
                   }`}
               >
@@ -138,7 +116,7 @@ const Sidebar: React.FC = () => {
         {/* Logout Button */}
         <button
           onClick={() => {
-            window.location.href = "/login";
+            window.location.href = "/que-me-pongo/login";
           }}
           className="flex flex-col items-center w-full group text-gray-400 hover:text-red-500 transition-colors"
         >
