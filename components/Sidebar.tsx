@@ -103,29 +103,26 @@ const Sidebar: React.FC = () => {
 
         <div className="h-px w-12 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
 
-        {/* Logout Button */}
+        {/* Log in Button */}
         <button
           onClick={() => {
             window.location.href = "/que-me-pongo/login";
           }}
-          className="flex flex-col items-center w-full group text-gray-400 hover:text-red-500 transition-colors"
+          className="flex flex-col items-center w-full group text-gray-400 hover:text-blue-500 transition-colors"
+          aria-label="Ir a Log in"
         >
-          <div className="w-14 h-14 flex items-center justify-center rounded-2xl group-hover:bg-red-50 mb-1 transition-all group-hover:scale-105 group-hover:rotate-12">
+          <div className="w-14 h-14 flex items-center justify-center rounded-2xl group-hover:bg-blue-50 mb-1 transition-all group-hover:scale-105 group-hover:rotate-12">
             <svg
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 17l5-5-5-5" />
             </svg>
           </div>
-          <span className="text-[10px] font-semibold tracking-wide uppercase">Salir</span>
+          <span className="text-[10px] font-semibold tracking-wide uppercase">Log in</span>
         </button>
       </aside>
     </>

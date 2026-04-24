@@ -62,8 +62,14 @@ const RAIN_OUTFIT = [
 ];
 
 const VIDEO = [
+  "https://www.pexels.com/download/video/17853969/",
   "https://www.pexels.com/download/video/15809009/",
-  "https://www.pexels.com/download/video/17853969/"
+  "https://www.pexels.com/download/video/7443231/",
+  "https://www.pexels.com/download/video/6312199/",
+  "https://www.pexels.com/download/video/28097318/",
+  "https://www.pexels.com/download/video/30514501/",
+
+
 ]
 
 const statesWeatherData: { [key: string]: WeatherData } = {
@@ -81,7 +87,7 @@ const statesWeatherData: { [key: string]: WeatherData } = {
     lat: 17.0732,
     lng: -96.7266,
     outfitImages: RAIN_OUTFIT,
-    video: VIDEO[1],
+    video: VIDEO[0],
   },
   CDMX: {
     city: "Ciudad de México",
@@ -97,7 +103,7 @@ const statesWeatherData: { [key: string]: WeatherData } = {
     lat: 19.4326,
     lng: -99.1332,
     outfitImages: MILD_OUTFIT,
-    video: VIDEO[0],
+    video: VIDEO[1],
   },
   Jalisco: {
     city: "Guadalajara",
@@ -113,6 +119,7 @@ const statesWeatherData: { [key: string]: WeatherData } = {
     lat: 20.6597,
     lng: -103.3496,
     outfitImages: HOT_OUTFIT,
+    video: VIDEO[2]
   },
   "Nuevo León": {
     city: "Monterrey",
@@ -128,6 +135,7 @@ const statesWeatherData: { [key: string]: WeatherData } = {
     lat: 25.6866,
     lng: -100.3161,
     outfitImages: HOT_OUTFIT,
+    video: VIDEO[3]
   },
   "Baja California": {
     city: "Tijuana",
@@ -143,6 +151,7 @@ const statesWeatherData: { [key: string]: WeatherData } = {
     lat: 32.5149,
     lng: -117.0382,
     outfitImages: MILD_OUTFIT,
+    video: VIDEO[4]
   },
   Yucatán: {
     city: "Mérida",
@@ -158,6 +167,7 @@ const statesWeatherData: { [key: string]: WeatherData } = {
     lat: 20.9674,
     lng: -89.5926,
     outfitImages: HOT_OUTFIT,
+    video: VIDEO[5]
   },
   Sonora: {
     city: "Hermosillo",
@@ -173,6 +183,7 @@ const statesWeatherData: { [key: string]: WeatherData } = {
     lat: 29.0729,
     lng: -110.9559,
     outfitImages: HOT_OUTFIT,
+    video: VIDEO[6]
   },
   Veracruz: {
     city: "Veracruz",
@@ -481,6 +492,13 @@ const DashboardPage: React.FC = () => {
       videoRef.current.pause();
       setVideoPlaying(false);
     }
+  };
+
+  const skip = (seconds: number) => {
+    if (!videoRef.current) return;
+    const v = videoRef.current;
+    const dur = v.duration || 0;
+    v.currentTime = Math.max(0, Math.min(dur, v.currentTime + seconds));
   };
 
   const handleSeek = (clientX: number, rect: DOMRect) => {
@@ -848,6 +866,14 @@ const DashboardPage: React.FC = () => {
                   <div className="absolute left-0 right-0 bottom-0 p-4 bg-gradient-to-t from-black/60 via-transparent to-transparent">
                     <div className="flex items-center gap-3">
                       <button
+                        onClick={() => skip(-10)}
+                        className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/30 flex items-center justify-center text-white"
+                        aria-label="Rebobinar 10s"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19V5l-8 7 8 7zM20 19V5l-8 7 8 7z" /></svg>
+                      </button>
+
+                      <button
                         onClick={toggleVideoPlay}
                         className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/30 flex items-center justify-center text-white"
                         aria-label={videoPlaying ? "Pausar video" : "Reproducir video"}
@@ -859,7 +885,15 @@ const DashboardPage: React.FC = () => {
                         )}
                       </button>
 
-                      <div className="flex-1">
+                      <button
+                        onClick={() => skip(10)}
+                        className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/30 flex items-center justify-center text-white"
+                        aria-label="Adelantar 10s"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 19v-14l8 7-8 7zM13 19V5l8 7-8 7z" /></svg>
+                      </button>
+
+                      <div className="flex-1 ml-3">
                         <div
                           className="h-2 bg-white/20 rounded-full cursor-pointer"
                           onClick={(e) => {
@@ -868,13 +902,9 @@ const DashboardPage: React.FC = () => {
                           }}
                         >
                           <div
-                            className="h-2 bg-emerald-400 rounded-full"
+                            className="h-2 bg-amber-400 rounded-full"
                             style={{ width: `${videoProgress}%` }}
                           />
-                        </div>
-                        <div className="flex items-center justify-between text-xs text-white/80 mt-2">
-                          <span>{videoDuration ? `${Math.floor((videoProgress/100)*videoDuration/60)}:${String(Math.floor((videoProgress/100)*videoDuration%60)).padStart(2,'0')}` : "0:00"}</span>
-                          <span>{videoDuration ? `${Math.floor(videoDuration/60)}:${String(Math.floor(videoDuration%60)).padStart(2,'0')}` : "0:00"}</span>
                         </div>
                       </div>
 
@@ -884,9 +914,7 @@ const DashboardPage: React.FC = () => {
               )}
             </div>
 
-            <div className="mt-4 text-sm text-white/90">
-              <div className="font-semibold">Video: {selectedWeather.city}</div>
-            </div>
+            
             <div className="flex justify-end mt-3">
               <button
                 onClick={() => {

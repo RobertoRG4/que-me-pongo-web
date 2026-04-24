@@ -146,7 +146,7 @@ const Login: React.FC = () => {
               Bienvenido
             </h2>
             <p className="text-slate-500 font-medium">
-              Ingresa tus credenciales para continuar
+              Ingresa tus credenciales para continuar a al panel de administración.
             </p>
           </div>
 
@@ -257,12 +257,13 @@ const Login: React.FC = () => {
                   </svg>
                 </span>
               ) : (
-                "Ingresar al Dashboard"
+                "Ingresar al Panel de Administración"
               )}
             </button>
           </form>
 
-          <div className="text-center text-sm text-slate-500 pt-10 flex justify-center gap-2 font-medium">
+          
+            {/*<div className="text-center text-sm text-slate-500 pt-10 flex justify-center gap-2 font-medium">
             ¿Aún no tienes una cuenta?
             <button
               onClick={handleSignup}
@@ -270,7 +271,7 @@ const Login: React.FC = () => {
             >
               Regístrate aquí
             </button>
-          </div>
+          </div>/*/}
         </div>
       </div>
 
