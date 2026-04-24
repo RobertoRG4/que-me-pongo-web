@@ -288,6 +288,7 @@ const DashboardPage: React.FC = () => {
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
+  const [videoVolume, setVideoVolume] = useState(1);
 
   // ── Configuración de Datos para el Gráfico ───────────────────────────────────
   const chartLabels = Object.values(statesWeatherData).map(d => d.state);
@@ -527,6 +528,16 @@ const DashboardPage: React.FC = () => {
       v.removeEventListener("ended", onEnded);
     };
   }, [showVideo, videoRef.current]);
+
+  // Sync volume state with the actual video element
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    try {
+      v.volume = videoVolume;
+      v.muted = videoVolume === 0;
+    } catch (e) {}
+  }, [videoVolume]);
 
   // Close video with Escape key
   useEffect(() => {
@@ -907,6 +918,21 @@ const DashboardPage: React.FC = () => {
                             style={{ width: `${videoProgress}%` }}
                           />
                         </div>
+                      </div>
+
+                      {/* Simple volume control */}
+                      <div className="flex items-center gap-2 ml-3">
+                        <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5L6 9H2v6h4l5 4V5z"/></svg>
+                        <input
+                          aria-label="Volumen del video"
+                          type="range"
+                          min={0}
+                          max={1}
+                          step={0.01}
+                          value={videoVolume}
+                          onChange={(e) => setVideoVolume(Number(e.target.value))}
+                          className="w-24 accent-amber-400"
+                        />
                       </div>
 
                     </div>
