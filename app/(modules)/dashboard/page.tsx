@@ -577,6 +577,14 @@ const DashboardPage: React.FC = () => {
 
   const [dbRecommendations, setDbRecommendations] = useState<any[]>([]);
 
+  // Video player states
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [videoDuration, setVideoDuration] = useState(0);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [videoVolume, setVideoVolume] = useState(1);
+
   useEffect(() => {
     fetch('/que-me-pongo/api/recommendations')
       .then(res => res.json())
