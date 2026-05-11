@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String   @default("USER") // 'ADMIN' or 'USER'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  loginRecords LoginRecord[]
+}
+
+model LoginRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress String?
+  success   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model OutfitRecommendation {
+  id             String   @id @default(uuid())
+  state          String
+  minTemp        Float
+  maxTemp        Float
+  recommendation String
+  images         String   // JSON string of image URLs/Base64
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

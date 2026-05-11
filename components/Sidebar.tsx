@@ -115,8 +115,13 @@ const Sidebar: React.FC = () => {
 
         {/* Logout Button */}
         <button
-          onClick={() => {
-            window.location.href = "/que-me-pongo/login";
+          onClick={async () => {
+            try {
+              await fetch('/que-me-pongo/api/auth/logout', { method: 'POST' });
+              window.location.href = "/que-me-pongo/login";
+            } catch (err) {
+              console.error(err);
+            }
           }}
           className="flex flex-col items-center w-full group text-gray-400 hover:text-red-500 transition-colors"
         >

@@ -1,19 +1,27 @@
 "use client";
 import React, { useState } from "react";
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccessMsg("");
 
-    if (!email || !password) {
+    if (!email || !password || !confirmPassword) {
       setError("Por favor completa todos los campos");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden");
       return;
     }
 
@@ -24,7 +32,7 @@ const Login: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const res = await fetch('/que-me-pongo/api/auth/login', {
+      const res = await fetch('/que-me-pongo/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -33,33 +41,39 @@ const Login: React.FC = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Ocurrió un error al iniciar sesión');
+        setError(data.error || 'Ocurrió un error al registrarse');
         setIsLoading(false);
         return;
       }
 
-      // Redirigir según el rol
-      if (data.user.role === 'ADMIN') {
-        globalThis.location.href = "/que-me-pongo/panel";
+      setSuccessMsg("¡Registro exitoso! Iniciando sesión...");
+      
+      // Auto login
+      const loginRes = await fetch('/que-me-pongo/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const loginData = await loginRes.json();
+      
+      if (loginRes.ok) {
+        if (loginData.user.role === 'ADMIN') {
+          globalThis.location.href = "/que-me-pongo/panel";
+        } else {
+          globalThis.location.href = "/que-me-pongo/dashboard";
+        }
       } else {
-        globalThis.location.href = "/que-me-pongo/dashboard";
+        globalThis.location.href = "/que-me-pongo/login";
       }
+
     } catch (err) {
       setError("Error de red. Inténtalo de nuevo.");
       setIsLoading(false);
     }
   };
 
-  const handleForgotPassword = () => {
-    if (email) {
-      alert(`Se enviará un enlace de recuperación a: ${email}`);
-    } else {
-      alert("Por favor ingresa tu correo electrónico primero");
-    }
-  };
-
-  const handleSignup = () => {
-    globalThis.location.href = "/que-me-pongo/register";
+  const handleLogin = () => {
+    globalThis.location.href = "/que-me-pongo/login";
   };
 
   return (
@@ -90,60 +104,19 @@ const Login: React.FC = () => {
           <div className="flex flex-col justify-center px-16 text-white max-w-xl mx-auto animate-float">
             {/* Logo */}
             <div className="w-20 h-20 bg-white/5 backdrop-blur-2xl rounded-3xl flex items-center justify-center text-4xl mb-10 border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:scale-110 hover:bg-white/10 transition-all duration-500 cursor-default">
-              🌤️
+              ✨
             </div>
 
             {/* Título */}
             <h1 className="text-5xl font-black mb-6 tracking-tight leading-tight">
-              Descubre tu estilo <br/>
+              Únete a la nueva <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-indigo-300 animate-gradient-x">
-                según el clima
+                experiencia
               </span>
             </h1>
             <p className="text-lg text-slate-300 font-light leading-relaxed mb-12 max-w-md">
-              Planifica tu outfit con inteligencia meteorológica. Datos en tiempo real para mantenerte fresco, abrigado y con estilo en México.
+              Crea tu cuenta en segundos y empieza a descubrir recomendaciones de estilo personalizadas basadas en el clima.
             </p>
-
-            {/* Features Restaurados y Mejorados */}
-            <div className="space-y-6 w-full">
-              {[
-                {
-                  icon: "🗺️",
-                  title: "Mapa Interactivo",
-                  desc: "Explora el clima en cualquier estado del país al instante",
-                  delay: "0.2s",
-                },
-                {
-                  icon: "👕",
-                  title: "Recomendaciones Smart",
-                  desc: "Sugerencias de prendas adaptadas a la temperatura actual",
-                  delay: "0.4s",
-                },
-                {
-                  icon: "📊",
-                  title: "Estadísticas Precisas",
-                  desc: "Humedad, viento e índice UV para que nada te sorprenda",
-                  delay: "0.6s",
-                },
-              ].map((feature, index) => (
-                <div
-                  key={index}
-                  className="flex items-center opacity-0 animate-fadeInUp group p-4 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
-                  style={{
-                    animationDelay: feature.delay,
-                    animationFillMode: "forwards",
-                  }}
-                >
-                  <div className="w-14 h-14 bg-white/5 backdrop-blur-md rounded-2xl flex items-center justify-center mr-5 text-2xl flex-shrink-0 border border-white/10 group-hover:scale-110 group-hover:bg-white/10 transition-all duration-300 shadow-lg">
-                    {feature.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg text-white mb-1 tracking-wide group-hover:text-emerald-300 transition-colors">{feature.title}</h3>
-                    <p className="text-sm text-slate-300 leading-relaxed">{feature.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
@@ -154,16 +127,16 @@ const Login: React.FC = () => {
           
           {/* Logo Móvil */}
           <div className="lg:hidden w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl mb-8 mx-auto shadow-inner">
-            🌤️
+            ✨
           </div>
 
           {/* Header */}
           <div className="mb-10 text-center lg:text-left">
             <h2 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">
-              Bienvenido
+              Regístrate
             </h2>
             <p className="text-slate-500 font-medium">
-              Ingresa tus credenciales para continuar
+              Crea tu cuenta para comenzar
             </p>
           </div>
 
@@ -171,6 +144,13 @@ const Login: React.FC = () => {
           {error && (
             <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-xl text-sm font-medium animate-in fade-in slide-in-from-top-2">
               {error}
+            </div>
+          )}
+
+          {/* Success Alert */}
+          {successMsg && (
+            <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r-xl text-sm font-medium animate-in fade-in slide-in-from-top-2">
+              {successMsg}
             </div>
           )}
 
@@ -231,22 +211,35 @@ const Login: React.FC = () => {
               </div>
             </div>
 
-            {/* Options */}
-            <div className="flex items-center justify-end">
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                className="text-sm text-blue-600 hover:text-blue-800 font-bold transition-colors"
+            {/* Confirm Password */}
+            <div className="group">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-bold text-slate-700 mb-2 transition-colors group-focus-within:text-blue-600"
               >
-                ¿Olvidaste tu contraseña?
-              </button>
+                Confirmar Contraseña
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg pointer-events-none group-focus-within:text-blue-500 transition-colors">
+                  🔒
+                </span>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full pl-12 pr-12 py-4 border-2 border-slate-200 rounded-2xl text-sm bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium text-slate-900"
+                  placeholder="Confirma tu contraseña"
+                  required
+                />
+              </div>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full py-4 mt-2 bg-slate-900 hover:bg-blue-600 text-white rounded-2xl font-bold text-base tracking-wide shadow-xl shadow-slate-900/20 hover:shadow-blue-600/30 transition-all duration-300 ${isLoading
+              className={`w-full py-4 mt-2 bg-slate-900 hover:bg-emerald-600 text-white rounded-2xl font-bold text-base tracking-wide shadow-xl shadow-slate-900/20 hover:shadow-emerald-600/30 transition-all duration-300 ${isLoading
                   ? "opacity-70 cursor-not-allowed"
                   : "hover:-translate-y-1"
                 } relative overflow-hidden group`}
@@ -274,18 +267,18 @@ const Login: React.FC = () => {
                   </svg>
                 </span>
               ) : (
-                "Ingresar al Dashboard"
+                "Crear Cuenta"
               )}
             </button>
           </form>
 
           <div className="text-center text-sm text-slate-500 pt-10 flex justify-center gap-2 font-medium">
-            ¿Aún no tienes una cuenta?
+            ¿Ya tienes una cuenta?
             <button
-              onClick={handleSignup}
+              onClick={handleLogin}
               className="text-blue-600 hover:text-blue-800 font-bold transition-colors hover:underline"
             >
-              Regístrate aquí
+              Inicia sesión aquí
             </button>
           </div>
         </div>
@@ -363,4 +356,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;

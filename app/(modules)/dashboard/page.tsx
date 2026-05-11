@@ -61,155 +61,453 @@ const RAIN_OUTFIT = [
 ];
 
 const statesWeatherData: { [key: string]: WeatherData } = {
-  Oaxaca: {
-    city: "Oaxaca de Juárez",
-    state: "Oaxaca",
-    temperature: 29,
-    condition: "Lluvia",
-    humidity: 42,
-    windSpeed: 7,
-    uvIndex: 29,
-    recommendation:
-      "Hace calor. Usa ropa fresca como playera de algodón, shorts o pantalón ligero.",
-    icon: "🌧️",
-    lat: 17.0732,
-    lng: -96.7266,
-    outfitImages: RAIN_OUTFIT,
-  },
-  CDMX: {
-    city: "Ciudad de México",
-    state: "CDMX",
-    temperature: 22,
-    condition: "Nublado",
-    humidity: 55,
-    windSpeed: 12,
-    uvIndex: 15,
-    recommendation:
-      "Clima templado. Usa pantalón de mezclilla, camisa o playera manga larga.",
-    icon: "☁️",
-    lat: 19.4326,
-    lng: -99.1332,
-    outfitImages: MILD_OUTFIT,
-  },
-  Jalisco: {
-    city: "Guadalajara",
-    state: "Jalisco",
-    temperature: 26,
-    condition: "Soleado",
-    humidity: 35,
-    windSpeed: 8,
-    uvIndex: 45,
-    recommendation:
-      "Día soleado. Usa playera ligera, shorts y no olvides gorra y lentes de sol.",
-    icon: "☀️",
-    lat: 20.6597,
-    lng: -103.3496,
-    outfitImages: HOT_OUTFIT,
-  },
-  "Nuevo León": {
-    city: "Monterrey",
-    state: "Nuevo León",
-    temperature: 32,
-    condition: "Muy caluroso",
-    humidity: 28,
-    windSpeed: 5,
-    uvIndex: 52,
-    recommendation:
-      "Mucho calor. Usa ropa muy ligera, shorts, playera sin mangas y protector solar.",
-    icon: "🔥",
-    lat: 25.6866,
-    lng: -100.3161,
-    outfitImages: HOT_OUTFIT,
+  "Aguascalientes": {
+    city: "Capital de Aguascalientes",
+    state: "Aguascalientes",
+    temperature: 16,
+    condition: "Fresco",
+    humidity: 32,
+    windSpeed: 14,
+    uvIndex: 8,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 21.8853,
+    lng: -102.2916,
+    outfitImages: [],
   },
   "Baja California": {
-    city: "Tijuana",
+    city: "Capital de Baja California",
     state: "Baja California",
+    temperature: 25,
+    condition: "Parcialmente nublado",
+    humidity: 55,
+    windSpeed: 14,
+    uvIndex: 4,
+    recommendation: "",
+    icon: "⛅",
+    lat: 30.8406,
+    lng: -115.2838,
+    outfitImages: [],
+  },
+  "Baja California Sur": {
+    city: "Capital de Baja California Sur",
+    state: "Baja California Sur",
     temperature: 18,
     condition: "Fresco",
-    humidity: 65,
-    windSpeed: 15,
-    uvIndex: 12,
-    recommendation:
-      "Clima fresco. Usa pantalón largo, sudadera o chamarra ligera.",
+    humidity: 72,
+    windSpeed: 9,
+    uvIndex: 8,
+    recommendation: "",
     icon: "🌤️",
-    lat: 32.5149,
-    lng: -117.0382,
-    outfitImages: MILD_OUTFIT,
+    lat: 26.0444,
+    lng: -111.6661,
+    outfitImages: [],
   },
-  Yucatán: {
-    city: "Mérida",
-    state: "Yucatán",
-    temperature: 34,
-    condition: "Soleado y húmedo",
-    humidity: 70,
+  "Campeche": {
+    city: "Capital de Campeche",
+    state: "Campeche",
+    temperature: 17,
+    condition: "Fresco",
+    humidity: 38,
+    windSpeed: 9,
+    uvIndex: 7,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 19.8301,
+    lng: -90.5349,
+    outfitImages: [],
+  },
+  "Chiapas": {
+    city: "Capital de Chiapas",
+    state: "Chiapas",
+    temperature: 21,
+    condition: "Fresco",
+    humidity: 79,
+    windSpeed: 18,
+    uvIndex: 5,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 16.7569,
+    lng: -93.1292,
+    outfitImages: [],
+  },
+  "Chihuahua": {
+    city: "Capital de Chihuahua",
+    state: "Chihuahua",
+    temperature: 20,
+    condition: "Fresco",
+    humidity: 58,
+    windSpeed: 17,
+    uvIndex: 9,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 28.633,
+    lng: -106.0691,
+    outfitImages: [],
+  },
+  "CDMX": {
+    city: "Capital de CDMX",
+    state: "CDMX",
+    temperature: 23,
+    condition: "Parcialmente nublado",
+    humidity: 47,
+    windSpeed: 13,
+    uvIndex: 5,
+    recommendation: "",
+    icon: "⛅",
+    lat: 19.4326,
+    lng: -99.1332,
+    outfitImages: [],
+  },
+  "Coahuila": {
+    city: "Capital de Coahuila",
+    state: "Coahuila",
+    temperature: 19,
+    condition: "Fresco",
+    humidity: 56,
     windSpeed: 10,
-    uvIndex: 60,
-    recommendation:
-      "Calor intenso y humedad. Ropa muy ligera de tela transpirable, sombrero y protector solar.",
-    icon: "🌞",
-    lat: 20.9674,
-    lng: -89.5926,
-    outfitImages: HOT_OUTFIT,
+    uvIndex: 7,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 27.0587,
+    lng: -101.7068,
+    outfitImages: [],
   },
-  Sonora: {
-    city: "Hermosillo",
-    state: "Sonora",
-    temperature: 36,
-    condition: "Extremo calor",
-    humidity: 18,
+  "Colima": {
+    city: "Capital de Colima",
+    state: "Colima",
+    temperature: 28,
+    condition: "Parcialmente nublado",
+    humidity: 35,
+    windSpeed: 7,
+    uvIndex: 3,
+    recommendation: "",
+    icon: "⛅",
+    lat: 19.2452,
+    lng: -103.7241,
+    outfitImages: [],
+  },
+  "Durango": {
+    city: "Capital de Durango",
+    state: "Durango",
+    temperature: 26,
+    condition: "Parcialmente nublado",
+    humidity: 74,
+    windSpeed: 17,
+    uvIndex: 9,
+    recommendation: "",
+    icon: "⛅",
+    lat: 24.0277,
+    lng: -104.6532,
+    outfitImages: [],
+  },
+  "Guanajuato": {
+    city: "Capital de Guanajuato",
+    state: "Guanajuato",
+    temperature: 27,
+    condition: "Parcialmente nublado",
+    humidity: 62,
+    windSpeed: 7,
+    uvIndex: 5,
+    recommendation: "",
+    icon: "⛅",
+    lat: 21.019,
+    lng: -101.2574,
+    outfitImages: [],
+  },
+  "Guerrero": {
+    city: "Capital de Guerrero",
+    state: "Guerrero",
+    temperature: 24,
+    condition: "Parcialmente nublado",
+    humidity: 61,
+    windSpeed: 18,
+    uvIndex: 3,
+    recommendation: "",
+    icon: "⛅",
+    lat: 17.5516,
+    lng: -99.501,
+    outfitImages: [],
+  },
+  "Hidalgo": {
+    city: "Capital de Hidalgo",
+    state: "Hidalgo",
+    temperature: 29,
+    condition: "Parcialmente nublado",
+    humidity: 46,
+    windSpeed: 19,
+    uvIndex: 3,
+    recommendation: "",
+    icon: "⛅",
+    lat: 20.0911,
+    lng: -98.7624,
+    outfitImages: [],
+  },
+  "Jalisco": {
+    city: "Capital de Jalisco",
+    state: "Jalisco",
+    temperature: 16,
+    condition: "Fresco",
+    humidity: 51,
     windSpeed: 6,
-    uvIndex: 65,
-    recommendation:
-      "Calor extremo. Usa ropa blanca y muy ligera, evita salir entre 11am y 3pm.",
-    icon: "☀️",
-    lat: 29.0729,
-    lng: -110.9559,
-    outfitImages: HOT_OUTFIT,
+    uvIndex: 6,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 20.6597,
+    lng: -103.3496,
+    outfitImages: [],
   },
-  Veracruz: {
-    city: "Veracruz",
-    state: "Veracruz",
+  "México": {
+    city: "Capital de México",
+    state: "México",
+    temperature: 33,
+    condition: "Soleado",
+    humidity: 51,
+    windSpeed: 5,
+    uvIndex: 10,
+    recommendation: "",
+    icon: "☀️",
+    lat: 19.2826,
+    lng: -99.6557,
+    outfitImages: [],
+  },
+  "Michoacán": {
+    city: "Capital de Michoacán",
+    state: "Michoacán",
+    temperature: 24,
+    condition: "Parcialmente nublado",
+    humidity: 74,
+    windSpeed: 14,
+    uvIndex: 10,
+    recommendation: "",
+    icon: "⛅",
+    lat: 19.5665,
+    lng: -101.7068,
+    outfitImages: [],
+  },
+  "Morelos": {
+    city: "Capital de Morelos",
+    state: "Morelos",
     temperature: 30,
     condition: "Parcialmente nublado",
-    humidity: 80,
+    humidity: 47,
     windSpeed: 18,
-    uvIndex: 35,
-    recommendation:
-      "Calor húmedo. Ropa ligera y transpirable. Lleva paraguas por si acaso.",
+    uvIndex: 9,
+    recommendation: "",
     icon: "⛅",
+    lat: 18.9261,
+    lng: -99.2308,
+    outfitImages: [],
+  },
+  "Nayarit": {
+    city: "Capital de Nayarit",
+    state: "Nayarit",
+    temperature: 22,
+    condition: "Fresco",
+    humidity: 40,
+    windSpeed: 19,
+    uvIndex: 10,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 21.504,
+    lng: -104.8947,
+    outfitImages: [],
+  },
+  "Nuevo León": {
+    city: "Capital de Nuevo León",
+    state: "Nuevo León",
+    temperature: 27,
+    condition: "Parcialmente nublado",
+    humidity: 68,
+    windSpeed: 19,
+    uvIndex: 5,
+    recommendation: "",
+    icon: "⛅",
+    lat: 25.6866,
+    lng: -100.3161,
+    outfitImages: [],
+  },
+  "Oaxaca": {
+    city: "Capital de Oaxaca",
+    state: "Oaxaca",
+    temperature: 27,
+    condition: "Parcialmente nublado",
+    humidity: 73,
+    windSpeed: 14,
+    uvIndex: 9,
+    recommendation: "",
+    icon: "⛅",
+    lat: 17.0732,
+    lng: -96.7266,
+    outfitImages: [],
+  },
+  "Puebla": {
+    city: "Capital de Puebla",
+    state: "Puebla",
+    temperature: 23,
+    condition: "Parcialmente nublado",
+    humidity: 38,
+    windSpeed: 6,
+    uvIndex: 6,
+    recommendation: "",
+    icon: "⛅",
+    lat: 19.0414,
+    lng: -98.2063,
+    outfitImages: [],
+  },
+  "Querétaro": {
+    city: "Capital de Querétaro",
+    state: "Querétaro",
+    temperature: 30,
+    condition: "Parcialmente nublado",
+    humidity: 77,
+    windSpeed: 11,
+    uvIndex: 8,
+    recommendation: "",
+    icon: "⛅",
+    lat: 20.5888,
+    lng: -100.3899,
+    outfitImages: [],
+  },
+  "Quintana Roo": {
+    city: "Capital de Quintana Roo",
+    state: "Quintana Roo",
+    temperature: 35,
+    condition: "Soleado",
+    humidity: 61,
+    windSpeed: 18,
+    uvIndex: 4,
+    recommendation: "",
+    icon: "☀️",
+    lat: 19.582,
+    lng: -87.732,
+    outfitImages: [],
+  },
+  "San Luis Potosí": {
+    city: "Capital de San Luis Potosí",
+    state: "San Luis Potosí",
+    temperature: 34,
+    condition: "Soleado",
+    humidity: 76,
+    windSpeed: 17,
+    uvIndex: 5,
+    recommendation: "",
+    icon: "☀️",
+    lat: 22.1565,
+    lng: -100.9855,
+    outfitImages: [],
+  },
+  "Sinaloa": {
+    city: "Capital de Sinaloa",
+    state: "Sinaloa",
+    temperature: 16,
+    condition: "Fresco",
+    humidity: 72,
+    windSpeed: 19,
+    uvIndex: 4,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 25.1721,
+    lng: -107.4795,
+    outfitImages: [],
+  },
+  "Sonora": {
+    city: "Capital de Sonora",
+    state: "Sonora",
+    temperature: 22,
+    condition: "Fresco",
+    humidity: 55,
+    windSpeed: 12,
+    uvIndex: 3,
+    recommendation: "",
+    icon: "🌤️",
+    lat: 29.073,
+    lng: -110.9559,
+    outfitImages: [],
+  },
+  "Tabasco": {
+    city: "Capital de Tabasco",
+    state: "Tabasco",
+    temperature: 27,
+    condition: "Parcialmente nublado",
+    humidity: 49,
+    windSpeed: 13,
+    uvIndex: 6,
+    recommendation: "",
+    icon: "⛅",
+    lat: 17.9895,
+    lng: -92.9281,
+    outfitImages: [],
+  },
+  "Tamaulipas": {
+    city: "Capital de Tamaulipas",
+    state: "Tamaulipas",
+    temperature: 32,
+    condition: "Soleado",
+    humidity: 41,
+    windSpeed: 12,
+    uvIndex: 6,
+    recommendation: "",
+    icon: "☀️",
+    lat: 24.2669,
+    lng: -98.8363,
+    outfitImages: [],
+  },
+  "Tlaxcala": {
+    city: "Capital de Tlaxcala",
+    state: "Tlaxcala",
+    temperature: 27,
+    condition: "Parcialmente nublado",
+    humidity: 52,
+    windSpeed: 12,
+    uvIndex: 6,
+    recommendation: "",
+    icon: "⛅",
+    lat: 19.3139,
+    lng: -98.2404,
+    outfitImages: [],
+  },
+  "Veracruz": {
+    city: "Capital de Veracruz",
+    state: "Veracruz",
+    temperature: 18,
+    condition: "Fresco",
+    humidity: 58,
+    windSpeed: 18,
+    uvIndex: 6,
+    recommendation: "",
+    icon: "🌤️",
     lat: 19.1738,
     lng: -96.1342,
-    outfitImages: HOT_OUTFIT,
+    outfitImages: [],
   },
-  Chihuahua: {
-    city: "Chihuahua",
-    state: "Chihuahua",
-    temperature: 28,
-    condition: "Soleado",
-    humidity: 22,
-    windSpeed: 9,
-    uvIndex: 48,
-    recommendation:
-      "Día caluroso y seco. Usa ropa ligera, protector solar y mantente hidratado.",
-    icon: "☀️",
-    lat: 28.6329,
-    lng: -106.0691,
-    outfitImages: HOT_OUTFIT,
+  "Yucatán": {
+    city: "Capital de Yucatán",
+    state: "Yucatán",
+    temperature: 26,
+    condition: "Parcialmente nublado",
+    humidity: 71,
+    windSpeed: 11,
+    uvIndex: 6,
+    recommendation: "",
+    icon: "⛅",
+    lat: 20.9674,
+    lng: -89.5926,
+    outfitImages: [],
   },
-  Quintana_Roo: {
-    city: "Cancún",
-    state: "Quintana Roo",
+  "Zacatecas": {
+    city: "Capital de Zacatecas",
+    state: "Zacatecas",
     temperature: 33,
-    condition: "Tropical",
-    humidity: 85,
-    windSpeed: 14,
-    uvIndex: 70,
-    recommendation:
-      "Clima tropical intenso. Ropa de playa, protector solar alto y mucha agua.",
-    icon: "🌴",
-    lat: 21.1619,
-    lng: -86.8515,
-    outfitImages: HOT_OUTFIT,
+    condition: "Soleado",
+    humidity: 55,
+    windSpeed: 13,
+    uvIndex: 5,
+    recommendation: "",
+    icon: "☀️",
+    lat: 22.7709,
+    lng: -102.5832,
+    outfitImages: [],
   },
 };
 
@@ -264,10 +562,27 @@ const DashboardPage: React.FC = () => {
   const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [outfitSlide, setOutfitSlide] = useState(0);
 
+  const [dbRecommendations, setDbRecommendations] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/que-me-pongo/api/recommendations')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          setDbRecommendations(data);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   // ── Configuración de Datos para el Gráfico ───────────────────────────────────
-  const chartLabels = Object.values(statesWeatherData).map(d => d.state);
-  const chartTemperatures = Object.values(statesWeatherData).map(d => d.temperature);
-  const chartHumidities = Object.values(statesWeatherData).map(d => d.humidity);
+  const activeStatesWeatherData = Object.values(statesWeatherData).filter(data => 
+    dbRecommendations.some(r => r.state === data.state)
+  );
+
+  const chartLabels = activeStatesWeatherData.map(d => d.state);
+  const chartTemperatures = activeStatesWeatherData.map(d => d.temperature);
+  const chartHumidities = activeStatesWeatherData.map(d => d.humidity);
 
   const chartData = {
     labels: chartLabels,
@@ -328,9 +643,23 @@ const DashboardPage: React.FC = () => {
     });
 
     mapInstanceRef.current = map;
+    setMapLoaded(true);
+  }, []);
 
-    // ── Marcadores por estado ────────────────────────────────────────────────
+  // ── Sincronizar Marcadores con DB ──────────────────────────────────────────
+  useEffect(() => {
+    if (!mapLoaded || !mapInstanceRef.current || !window.google) return;
+    const map = mapInstanceRef.current;
+
+    // Limpiar marcadores anteriores
+    markersRef.current.forEach(m => m.setMap(null));
+    markersRef.current = [];
+
+    // Dibujar marcadores solo para los estados que tengan recomendaciones en la DB
     Object.entries(statesWeatherData).forEach(([key, data]) => {
+      const stateRecs = dbRecommendations.filter(r => r.state === data.state);
+      if (stateRecs.length === 0) return; // Si no hay recomendación para este estado, no mostrar marcador
+
       const tempColor =
         data.temperature >= 32
           ? "#E24B4A"
@@ -363,7 +692,20 @@ const DashboardPage: React.FC = () => {
       });
 
       marker.addListener("click", () => {
-        setSelectedWeather(data);
+        // Encontrar recomendación que coincida con la temperatura actual
+        const matchedRec = stateRecs.find(r => 
+          data.temperature >= r.minTemp && 
+          data.temperature <= r.maxTemp
+        );
+
+        // Si la temperatura no cuadra perfectamente, mostramos la primera por defecto para no dejarlo vacío
+        const recToUse = matchedRec || stateRecs[0];
+
+        const mergedData = { ...data };
+        mergedData.recommendation = recToUse.recommendation;
+        mergedData.outfitImages = recToUse.images.length > 0 ? recToUse.images : [];
+
+        setSelectedWeather(mergedData);
         setShowCard(true);
         setOutfitSlide(0); // Reiniciar el slider
         map.panTo({ lat: data.lat, lng: data.lng });
@@ -371,9 +713,7 @@ const DashboardPage: React.FC = () => {
 
       markersRef.current.push(marker);
     });
-
-    setMapLoaded(true);
-  }, []);
+  }, [mapLoaded, dbRecommendations]);
 
   // ── Solicitar ubicación del usuario de forma independiente ──────────────────
   const requestLocation = useCallback(() => {
