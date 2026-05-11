@@ -40,6 +40,7 @@ interface WeatherData {
   icon: string;
   lat: number;
   lng: number;
+  video?: string;
   outfitImages: string[];
 }
 
@@ -59,6 +60,18 @@ const RAIN_OUTFIT = [
   "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=400&h=300&fit=crop&q=80",
   "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=400&h=300&fit=crop&q=80"
 ];
+
+const VIDEO = [
+  "https://www.pexels.com/download/video/17853969/",
+  "https://www.pexels.com/download/video/15809009/",
+  "https://www.pexels.com/download/video/7443231/",
+  "https://www.pexels.com/download/video/6312199/",
+  "https://www.pexels.com/download/video/28097318/",
+  "https://www.pexels.com/download/video/30514501/",
+  "https://www.pexels.com/download/video/30893943/",
+  ""
+
+]
 
 const statesWeatherData: { [key: string]: WeatherData } = {
   "Aguascalientes": {
@@ -558,7 +571,7 @@ const DashboardPage: React.FC = () => {
   const [showCard, setShowCard] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showChart, setShowChart] = useState(false);
-  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null);
   const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [outfitSlide, setOutfitSlide] = useState(0);
 
@@ -576,7 +589,7 @@ const DashboardPage: React.FC = () => {
   }, []);
 
   // ── Configuración de Datos para el Gráfico ───────────────────────────────────
-  const activeStatesWeatherData = Object.values(statesWeatherData).filter(data => 
+  const activeStatesWeatherData = Object.values(statesWeatherData).filter(data =>
     dbRecommendations.some(r => r.state === data.state)
   );
 
@@ -693,8 +706,8 @@ const DashboardPage: React.FC = () => {
 
       marker.addListener("click", () => {
         // Encontrar recomendación que coincida con la temperatura actual
-        const matchedRec = stateRecs.find(r => 
-          data.temperature >= r.minTemp && 
+        const matchedRec = stateRecs.find(r =>
+          data.temperature >= r.minTemp &&
           data.temperature <= r.maxTemp
         );
 
@@ -798,6 +811,83 @@ const DashboardPage: React.FC = () => {
           : "from-teal-500 to-cyan-600"
     : "from-blue-500 to-blue-600";
 
+  // ── Video player handlers ───────────────────────────────────────────────
+  const toggleVideoPlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setVideoPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setVideoPlaying(false);
+    }
+  };
+
+  const skip = (seconds: number) => {
+    if (!videoRef.current) return;
+    const v = videoRef.current;
+    const dur = v.duration || 0;
+    v.currentTime = Math.max(0, Math.min(dur, v.currentTime + seconds));
+  };
+
+  const handleSeek = (clientX: number, rect: DOMRect) => {
+    if (!videoRef.current || !videoDuration) return;
+    const x = clientX - rect.left;
+    const pct = Math.max(0, Math.min(1, x / rect.width));
+    videoRef.current.currentTime = pct * videoDuration;
+  };
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    const onTime = () => setVideoProgress((v.currentTime / Math.max(1, v.duration)) * 100);
+    const onMeta = () => setVideoDuration(v.duration || 0);
+    const onEnded = () => setVideoPlaying(false);
+
+    v.addEventListener("timeupdate", onTime);
+    v.addEventListener("loadedmetadata", onMeta);
+    v.addEventListener("ended", onEnded);
+
+    return () => {
+      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener("loadedmetadata", onMeta);
+      v.removeEventListener("ended", onEnded);
+    };
+  }, [showVideo, videoRef.current]);
+
+  // Sync volume state with the actual video element
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    try {
+      v.volume = videoVolume;
+      v.muted = videoVolume === 0;
+    } catch (e) { }
+  }, [videoVolume]);
+
+  // Close video with Escape key
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && showVideo) {
+        if (videoRef.current) videoRef.current.pause();
+        setShowVideo(false);
+        setVideoPlaying(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showVideo]);
+
+  // Simple public URL resolver. Set NEXT_PUBLIC_BASE_PATH in env when using next.config.basePath.
+  const appBasePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/\/$/, "");
+  const publicUrl = (p: string) => {
+    if (!p) return p;
+    if (/^https?:\/\//.test(p)) return p; // external URL
+    const path = p.startsWith("/") ? p : `/${p}`;
+    return `${appBasePath}${path}`;
+  };
+
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Google Map container */}
@@ -825,7 +915,7 @@ const DashboardPage: React.FC = () => {
               setShowCard(false);
               setSelectedWeather(null);
             }}
-            className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 z-10"
+            className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 z-40"
           >
             <svg
               className="w-4 h-4 text-white"
@@ -846,7 +936,7 @@ const DashboardPage: React.FC = () => {
           <div className={`bg-gradient-to-br ${headerColor} p-6 text-white relative overflow-hidden`}>
             {/* Decoración de fondo */}
             <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-            
+
             <div className="flex items-start justify-between mb-4 relative z-10">
               <div>
                 <h3 className="text-xl font-bold">{selectedWeather.city}</h3>
@@ -855,6 +945,27 @@ const DashboardPage: React.FC = () => {
               <div className="text-6xl drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-pulse">
                 {selectedWeather.icon}
               </div>
+            </div>
+            {/* Info button placed below the names */}
+            <div className="mt-2">
+              <button
+                onClick={() => {
+                  if (selectedWeather?.video) {
+                    setShowVideo(true);
+                    setVideoProgress(0);
+                    setVideoDuration(0);
+                    setVideoPlaying(false);
+                  } else {
+                    alert("No hay video disponible para esta ciudad");
+                  }
+                }}
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm px-3 py-1.5 rounded-lg shadow-sm"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 110 20 10 10 0 010-20z" />
+                </svg>
+                <span>Ver video</span>
+              </button>
             </div>
             <div className="flex items-end gap-2">
               <span className="text-7xl font-black tracking-tighter drop-shadow-md">
@@ -913,9 +1024,8 @@ const DashboardPage: React.FC = () => {
                 {selectedWeather.outfitImages.map((img, idx) => (
                   <div
                     key={idx}
-                    className={`absolute inset-0 transition-all duration-700 ease-out ${
-                      idx === outfitSlide ? "opacity-100 z-10 scale-100" : "opacity-0 z-0 scale-110"
-                    }`}
+                    className={`absolute inset-0 transition-all duration-700 ease-out ${idx === outfitSlide ? "opacity-100 z-10 scale-100" : "opacity-0 z-0 scale-110"
+                      }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -926,7 +1036,7 @@ const DashboardPage: React.FC = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 ))}
-                
+
                 {/* Slider Controls */}
                 <button
                   onClick={() => setOutfitSlide((prev) => (prev === 0 ? selectedWeather.outfitImages.length - 1 : prev - 1))}
@@ -947,9 +1057,8 @@ const DashboardPage: React.FC = () => {
                     <button
                       key={idx}
                       onClick={() => setOutfitSlide(idx)}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        idx === outfitSlide ? "bg-white w-6 shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "bg-white/50 hover:bg-white/90 w-1.5"
-                      }`}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${idx === outfitSlide ? "bg-white w-6 shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "bg-white/50 hover:bg-white/90 w-1.5"
+                        }`}
                     />
                   ))}
                 </div>
@@ -988,7 +1097,7 @@ const DashboardPage: React.FC = () => {
       {mapLoaded && (
         <button
           onClick={() => setShowChart(true)}
-          className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg px-4 py-3 border border-gray-200 z-10 font-semibold text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2"
+          className="absolute top-68 left-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg px-4 py-3 border border-gray-200 z-10 font-semibold text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2"
         >
           <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
           <span className="hidden sm:inline">Ver Estadísticas</span>
@@ -1000,7 +1109,7 @@ const DashboardPage: React.FC = () => {
         <button
           onClick={requestLocation}
           disabled={locationStatus === "loading"}
-          className="absolute top-20 right-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg px-4 py-3 border border-gray-200 z-10 font-semibold text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2 disabled:opacity-70"
+          className="absolute top-50 left-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg px-4 py-3 border border-gray-200 z-10 font-semibold text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2 disabled:opacity-70"
         >
           {locationStatus === "loading" ? (
             <svg className="animate-spin h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
@@ -1017,21 +1126,162 @@ const DashboardPage: React.FC = () => {
       {/* Modal del Gráfico Canvas */}
       {showChart && (
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-20 flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-300">
-           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl p-6 relative flex flex-col h-[80vh]">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl p-6 relative flex flex-col h-[80vh]">
+            <button
+              onClick={() => setShowChart(false)}
+              className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors z-10"
+            >
+              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Comparativa de Estados</h2>
+            <p className="text-gray-500 mb-6">Gráfico interactivo renderizado en Canvas</p>
+
+            <div className="flex-1 w-full relative">
+              <Bar data={chartData} options={chartOptions} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Video Modal (reproductor propio) */}
+      {showVideo && selectedWeather && selectedWeather.video && (
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-30 flex items-center justify-center p-4 md:p-8">
+          <div className="bg-[#4169E1] rounded-3xl shadow-2xl w-full max-w-3xl p-4 relative">
+            <button
+              onClick={() => {
+                if (videoRef.current) {
+                  videoRef.current.pause();
+                }
+                setShowVideo(false);
+                setVideoPlaying(false);
+              }}
+              className="absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/30 rounded-full flex items-center justify-center text-white z-40"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden bg-black relative">
+              {/* If video is YouTube link, render iframe embed, otherwise use native video */}
+              {selectedWeather.video && /youtu/.test(selectedWeather.video) ? (
+                <iframe
+                  className="w-full h-full"
+                  src={selectedWeather.video.includes("embed") ? selectedWeather.video : `https://www.youtube.com/embed/${selectedWeather.video.split("/").pop()}`}
+                  title={`Video ${selectedWeather.city}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <>
+                  <video
+                    ref={videoRef}
+                    src={publicUrl(selectedWeather.video ?? "")}
+                    className="w-full h-full object-cover bg-black"
+                    playsInline
+                    preload="metadata"
+                  />
+
+                  {/* Center play overlay when not playing */}
+                  {!videoPlaying && (
+                    <button
+                      onClick={() => {
+                        if (videoRef.current) {
+                          videoRef.current.play();
+                          setVideoPlaying(true);
+                        }
+                      }}
+                      className="absolute inset-0 m-auto w-20 h-20 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white z-30 transition-transform transform hover:scale-105"
+                      aria-label="Reproducir video"
+                    >
+                      <svg className="w-8 h-8 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v18l15-9L5 3z" /></svg>
+                    </button>
+                  )}
+
+                  {/* Custom Controls for native video */}
+                  <div className="absolute left-0 right-0 bottom-0 p-4 bg-gradient-to-t from-black/60 via-transparent to-transparent">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => skip(-10)}
+                        className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/30 flex items-center justify-center text-white"
+                        aria-label="Rebobinar 10s"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19V5l-8 7 8 7zM20 19V5l-8 7 8 7z" /></svg>
+                      </button>
+
+                      <button
+                        onClick={toggleVideoPlay}
+                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/30 flex items-center justify-center text-white"
+                        aria-label={videoPlaying ? "Pausar video" : "Reproducir video"}
+                      >
+                        {videoPlaying ? (
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18V6m12 12V6" /></svg>
+                        ) : (
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v18l15-9L5 3z" /></svg>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => skip(10)}
+                        className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/30 flex items-center justify-center text-white"
+                        aria-label="Adelantar 10s"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 19v-14l8 7-8 7zM13 19V5l8 7-8 7z" /></svg>
+                      </button>
+
+                      <div className="flex-1 ml-3">
+                        <div
+                          className="h-2 bg-white/20 rounded-full cursor-pointer"
+                          onClick={(e) => {
+                            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                            handleSeek((e as React.MouseEvent).clientX, rect);
+                          }}
+                        >
+                          <div
+                            className="h-2 bg-amber-400 rounded-full"
+                            style={{ width: `${videoProgress}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Simple volume control */}
+                      <div className="flex items-center gap-2 ml-3">
+                        <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5L6 9H2v6h4l5 4V5z" /></svg>
+                        <input
+                          aria-label="Volumen del video"
+                          type="range"
+                          min={0}
+                          max={1}
+                          step={0.01}
+                          value={videoVolume}
+                          onChange={(e) => setVideoVolume(Number(e.target.value))}
+                          className="w-24 accent-amber-400"
+                        />
+                      </div>
+
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+
+            <div className="flex justify-end mt-3">
               <button
-                onClick={() => setShowChart(false)}
-                className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors z-10"
+                onClick={() => {
+                  if (videoRef.current) {
+                    videoRef.current.pause();
+                  }
+                  setShowVideo(false);
+                  setVideoPlaying(false);
+                }}
+                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-semibold"
               >
-                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                Cerrar
               </button>
-              
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Comparativa de Estados</h2>
-              <p className="text-gray-500 mb-6">Gráfico interactivo renderizado en Canvas</p>
-              
-              <div className="flex-1 w-full relative">
-                 <Bar data={chartData} options={chartOptions} />
-              </div>
-           </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
